@@ -29,13 +29,34 @@ if (menuToggle) {
     menuToggle.setAttribute("aria-expanded", String(!isOpen));
   });
 
-  mobileMenu.querySelectorAll("a").forEach((link) => {
+  mobileMenu.querySelectorAll("a, button[data-open-cv]").forEach((link) => {
     link.addEventListener("click", () => {
       mobileMenu.classList.add("hidden");
       iconBurger.classList.remove("hidden");
       iconClose.classList.add("hidden");
       menuToggle.setAttribute("aria-expanded", "false");
     });
+  });
+}
+
+// =========================================================
+// PRATINJAU CV
+// =========================================================
+const cvDialog = document.getElementById("cv-dialog");
+
+document.querySelectorAll("[data-open-cv]").forEach((button) => {
+  button.addEventListener("click", () => {
+    if (!cvDialog || cvDialog.open) return;
+    const preview = cvDialog.querySelector(".cv-preview");
+    if (!preview.hasAttribute("src")) preview.src = preview.dataset.src;
+    cvDialog.showModal();
+  });
+});
+
+if (cvDialog) {
+  cvDialog.querySelector("[data-close-cv]").addEventListener("click", () => cvDialog.close());
+  cvDialog.addEventListener("click", (event) => {
+    if (event.target === cvDialog) cvDialog.close();
   });
 }
 
@@ -62,24 +83,27 @@ if ("IntersectionObserver" in window && revealEls.length) {
 }
 
 // =========================================================
-// FILTER PROJECT / PRODUK
+// INDIKATOR SECTION AKTIF
 // =========================================================
-const filterBar = document.getElementById("filter-bar");
-const projectCards = document.querySelectorAll("#project-grid .project-card[data-tags]");
+const sectionLinks = document.querySelectorAll('.nav-link[href^="#"]');
+const sections = [...sectionLinks]
+  .map((link) => document.querySelector(link.getAttribute("href")))
+  .filter(Boolean);
 
-if (filterBar) {
-  filterBar.addEventListener("click", (e) => {
-    const btn = e.target.closest(".filter-btn");
-    if (!btn) return;
-
-    filterBar.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("is-active"));
-    btn.classList.add("is-active");
-
-    const filter = btn.dataset.filter;
-    projectCards.forEach((card) => {
-      const tags = (card.dataset.tags || "").split(" ");
-      const show = filter === "all" || tags.includes(filter);
-      card.classList.toggle("is-hidden", !show);
-    });
-  });
+if ("IntersectionObserver" in window && sections.length) {
+  const sectionObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        sectionLinks.forEach((link) => {
+          const active = link.getAttribute("href") === `#${entry.target.id}`;
+          link.classList.toggle("is-active", active);
+          if (active) link.setAttribute("aria-current", "location");
+          else link.removeAttribute("aria-current");
+        });
+      });
+    },
+    { rootMargin: "-25% 0px -60% 0px" }
+  );
+  sections.forEach((section) => sectionObserver.observe(section));
 }
