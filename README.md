@@ -45,7 +45,7 @@ Referensi: https://docs.github.com/en/pages/configuring-a-custom-domain-for-your
 - `index.html`: konten dan struktur halaman.
 - `style.css`: gaya komponen dan responsivitas.
 - `script.js`: navigasi mobile, indikator section aktif, dan animasi masuk.
-- `project-image/foto-formal.png` dan `project-image/foto-formal-cutout.png`: foto sumber serta versi transparan untuk hero.
+- `project-image/foto-formal-baru.png`: foto profil yang digunakan pada hero dan metadata berbagi. Foto sebelumnya tetap disimpan sebagai asset sumber.
 - `project-image/warehaus.png`: gambar project WareHaus.
 - WareHaus Web: https://warehaus.web.app/.
 - `project-image/Logo_PENS.png`: logo institusi pendidikan.
